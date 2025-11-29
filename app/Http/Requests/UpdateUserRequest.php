@@ -23,13 +23,13 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('user');
+        $userId = $this->route('user') ?? $this->route('id');
         
         return [
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
+            'username' => ['sometimes', 'string', 'max:100', 'min:8', 'alpha_dash', Rule::unique('users', 'username')->ignore($userId)],
             'password' => ['sometimes', 'nullable', 'string', Password::min(8)],
-            'role' => ['sometimes', 'nullable', 'string', 'in:admin,user,guest'],
+            'role' => ['sometimes', 'nullable', 'string', 'in:admin,guest,super_admin'],
+            // member_id intentionally excluded from updates
         ];
     }
 
@@ -45,8 +45,11 @@ class UpdateUserRequest extends FormRequest
             'email.required' => 'Email harus diisi',
             'email.email' => 'Format email tidak valid',
             'email.unique' => 'Email sudah terdaftar',
+            'username.required' => 'Username harus diisi',
+            'username.min' => 'Username minimal 8 karakter',
             'password.min' => 'Password minimal 8 karakter',
-            'role.in' => 'Role harus salah satu dari: admin, user, guest',
+            'role.in' => 'Role harus salah satu dari: admin, user, guest, super_admin',
+            'member_id.exists' => 'Member tidak ditemukan',
         ];
     }
 }

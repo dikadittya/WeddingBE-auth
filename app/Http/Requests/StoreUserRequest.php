@@ -24,9 +24,11 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'email' => ['nullable', 'string', 'email', 'max:255'],
+            'username' => ['required', 'string', 'max:100', 'min:8', 'alpha_dash', 'unique:users,username'],
             'password' => ['required', 'string', Password::min(8)],
-            'role' => ['nullable', 'string', 'in:admin,user,guest'],
+            'role' => ['nullable', 'string', 'in:admin,user,guest,super_admin'],
+            'member_id' => ['required', 'integer', 'exists:members,id'],
         ];
     }
 
@@ -39,12 +41,13 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama harus diisi',
-            'email.required' => 'Email harus diisi',
             'email.email' => 'Format email tidak valid',
-            'email.unique' => 'Email sudah terdaftar',
+            'username.required' => 'Username harus diisi',
+            'username.min' => 'Username minimal 8 karakter',
             'password.required' => 'Password harus diisi',
             'password.min' => 'Password minimal 8 karakter',
-            'role.in' => 'Role harus salah satu dari: admin, user, guest',
+            'role.in' => 'Role harus salah satu dari: admin, user, guest, super_admin',
+            'member_id.exists' => 'Member tidak ditemukan',
         ];
     }
 }

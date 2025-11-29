@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'role',
@@ -30,6 +31,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'updated_at',
         'password',
         'remember_token',
     ];
@@ -60,5 +62,13 @@ class User extends Authenticatable
     public function userRole()
     {
         return $this->belongsTo(UserRole::class, 'role', 'name');
+    }
+
+    /**
+     * The member profile associated with the user.
+     */
+    public function member()
+    {
+        return $this->hasOne(Member::class, 'user_id');
     }
 }

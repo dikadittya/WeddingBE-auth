@@ -1,0 +1,737 @@
+{
+	"info": {
+		"_postman_id": "menu-api-collection-2025",
+		"name": "Wedding Auth API - Menus",
+		"description": "Complete API collection for Menu Management with Casbin RBAC authorization. Includes hierarchical menu structure with role-based access control.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Menus",
+			"item": [
+				{
+					"name": "Get All Menus",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/menus?per_page=15&is_active=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Number of items per page"
+								},
+								{
+									"key": "is_active",
+									"value": "1",
+									"description": "Filter by active status (1=active, 0=inactive)"
+								},
+								{
+									"key": "parent_only",
+									"value": "1",
+									"description": "Show only parent menus",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "super_admin",
+									"description": "Filter by role name",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Retrieve paginated list of menus with optional filters:\n- per_page: Number of items per page (default: 15)\n- is_active: Filter by active status\n- parent_only: Show only parent menus\n- role: Filter menus by role name\n\n**Authorization:** Requires Casbin permission (menus, GET)\n- super_admin: Full access\n- admin: Read only"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/menus?per_page=15",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus"
+									],
+									"query": [
+										{
+											"key": "per_page",
+											"value": "15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Menus retrieved successfully\",\n    \"data\": {\n        \"current_page\": 1,\n        \"data\": [\n            {\n                \"id\": 1,\n                \"name\": \"Dashboard\",\n                \"slug\": \"dashboard\",\n                \"icon\": \"dashboard\",\n                \"url\": \"/dashboard\",\n                \"parent_id\": null,\n                \"order\": 1,\n                \"is_active\": true,\n                \"created_at\": \"2025-11-26 10:00:00\",\n                \"updated_at\": \"2025-11-26 10:00:00\",\n                \"parent\": null,\n                \"children\": [],\n                \"roles\": [\n                    {\n                        \"id\": 1,\n                        \"menu_id\": 1,\n                        \"role_name\": \"super_admin\"\n                    },\n                    {\n                        \"id\": 2,\n                        \"menu_id\": 1,\n                        \"role_name\": \"admin\"\n                    },\n                    {\n                        \"id\": 3,\n                        \"menu_id\": 1,\n                        \"role_name\": \"user\"\n                    }\n                ]\n            },\n            {\n                \"id\": 2,\n                \"name\": \"User Management\",\n                \"slug\": \"user-management\",\n                \"icon\": \"users\",\n                \"url\": null,\n                \"parent_id\": null,\n                \"order\": 2,\n                \"is_active\": true,\n                \"created_at\": \"2025-11-26 10:00:00\",\n                \"updated_at\": \"2025-11-26 10:00:00\",\n                \"parent\": null,\n                \"children\": [\n                    {\n                        \"id\": 3,\n                        \"name\": \"Users\",\n                        \"slug\": \"users\",\n                        \"icon\": \"user\",\n                        \"url\": \"/users\",\n                        \"parent_id\": 2,\n                        \"order\": 1,\n                        \"is_active\": true,\n                        \"created_at\": \"2025-11-26 10:00:00\",\n                        \"updated_at\": \"2025-11-26 10:00:00\",\n                        \"roles\": [\n                            {\n                                \"id\": 4,\n                                \"menu_id\": 3,\n                                \"role_name\": \"super_admin\"\n                            },\n                            {\n                                \"id\": 5,\n                                \"menu_id\": 3,\n                                \"role_name\": \"admin\"\n                            }\n                        ]\n                    },\n                    {\n                        \"id\": 4,\n                        \"name\": \"Roles\",\n                        \"slug\": \"roles\",\n                        \"icon\": \"shield\",\n                        \"url\": \"/roles\",\n                        \"parent_id\": 2,\n                        \"order\": 2,\n                        \"is_active\": true,\n                        \"created_at\": \"2025-11-26 10:00:00\",\n                        \"updated_at\": \"2025-11-26 10:00:00\",\n                        \"roles\": [\n                            {\n                                \"id\": 6,\n                                \"menu_id\": 4,\n                                \"role_name\": \"super_admin\"\n                            },\n                            {\n                                \"id\": 7,\n                                \"menu_id\": 4,\n                                \"role_name\": \"admin\"\n                            }\n                        ]\n                    }\n                ],\n                \"roles\": [\n                    {\n                        \"id\": 8,\n                        \"menu_id\": 2,\n                        \"role_name\": \"super_admin\"\n                    },\n                    {\n                        \"id\": 9,\n                        \"menu_id\": 2,\n                        \"role_name\": \"admin\"\n                    }\n                ]\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Member Management\",\n                \"slug\": \"member-management\",\n                \"icon\": \"people\",\n                \"url\": null,\n                \"parent_id\": null,\n                \"order\": 3,\n                \"is_active\": true,\n                \"created_at\": \"2025-11-26 10:00:00\",\n                \"updated_at\": \"2025-11-26 10:00:00\",\n                \"parent\": null,\n                \"children\": [\n                    {\n                        \"id\": 6,\n                        \"name\": \"Members\",\n                        \"slug\": \"members\",\n                        \"icon\": \"person\",\n                        \"url\": \"/members\",\n                        \"parent_id\": 5,\n                        \"order\": 1,\n                        \"is_active\": true,\n                        \"created_at\": \"2025-11-26 10:00:00\",\n                        \"updated_at\": \"2025-11-26 10:00:00\",\n                        \"roles\": [\n                            {\n                                \"id\": 10,\n                                \"menu_id\": 6,\n                                \"role_name\": \"super_admin\"\n                            },\n                            {\n                                \"id\": 11,\n                                \"menu_id\": 6,\n                                \"role_name\": \"admin\"\n                            },\n                            {\n                                \"id\": 12,\n                                \"menu_id\": 6,\n                                \"role_name\": \"user\"\n                            }\n                        ]\n                    }\n                ],\n                \"roles\": [\n                    {\n                        \"id\": 13,\n                        \"menu_id\": 5,\n                        \"role_name\": \"super_admin\"\n                    },\n                    {\n                        \"id\": 14,\n                        \"menu_id\": 5,\n                        \"role_name\": \"admin\"\n                    }\n                ]\n            }\n        ],\n        \"first_page_url\": \"http://localhost:8000/api/menus?page=1\",\n        \"from\": 1,\n        \"last_page\": 1,\n        \"last_page_url\": \"http://localhost:8000/api/menus?page=1\",\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/menus?page=1\",\n                \"label\": \"1\",\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"active\": false\n            }\n        ],\n        \"next_page_url\": null,\n        \"path\": \"http://localhost:8000/api/menus\",\n        \"per_page\": 15,\n        \"prev_page_url\": null,\n        \"to\": 10,\n        \"total\": 10\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Menu Tree",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/menus/tree?is_active=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus",
+								"tree"
+							],
+							"query": [
+								{
+									"key": "is_active",
+									"value": "1",
+									"description": "Filter by active status (default: true)"
+								},
+								{
+									"key": "role",
+									"value": "super_admin",
+									"description": "Filter by role name",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get hierarchical menu tree structure with parent-children relationships.\n\n**Query Parameters:**\n- is_active: Filter by active status (default: true)\n- role: Filter menus by role name\n\n**Authorization:** Requires Casbin permission (menus, GET)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/menus/tree",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus",
+										"tree"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Menu tree retrieved successfully\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Dashboard\",\n            \"slug\": \"dashboard\",\n            \"icon\": \"dashboard\",\n            \"url\": \"/dashboard\",\n            \"parent_id\": null,\n            \"order\": 1,\n            \"is_active\": true,\n            \"created_at\": \"2025-11-26 10:00:00\",\n            \"updated_at\": \"2025-11-26 10:00:00\",\n            \"children\": []\n        },\n        {\n            \"id\": 2,\n            \"name\": \"User Management\",\n            \"slug\": \"user-management\",\n            \"icon\": \"users\",\n            \"url\": null,\n            \"parent_id\": null,\n            \"order\": 2,\n            \"is_active\": true,\n            \"created_at\": \"2025-11-26 10:00:00\",\n            \"updated_at\": \"2025-11-26 10:00:00\",\n            \"children\": [\n                {\n                    \"id\": 3,\n                    \"name\": \"Users\",\n                    \"slug\": \"users\",\n                    \"icon\": \"user\",\n                    \"url\": \"/users\",\n                    \"parent_id\": 2,\n                    \"order\": 1,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-11-26 10:00:00\",\n                    \"updated_at\": \"2025-11-26 10:00:00\",\n                    \"roles\": [\n                        {\n                            \"id\": 1,\n                            \"menu_id\": 3,\n                            \"role_name\": \"super_admin\"\n                        },\n                        {\n                            \"id\": 2,\n                            \"menu_id\": 3,\n                            \"role_name\": \"admin\"\n                        }\n                    ]\n                },\n                {\n                    \"id\": 4,\n                    \"name\": \"Roles\",\n                    \"slug\": \"roles\",\n                    \"icon\": \"shield\",\n                    \"url\": \"/roles\",\n                    \"parent_id\": 2,\n                    \"order\": 2,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-11-26 10:00:00\",\n                    \"updated_at\": \"2025-11-26 10:00:00\",\n                    \"roles\": [\n                        {\n                            \"id\": 3,\n                            \"menu_id\": 4,\n                            \"role_name\": \"super_admin\"\n                        },\n                        {\n                            \"id\": 4,\n                            \"menu_id\": 4,\n                            \"role_name\": \"admin\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Member Management\",\n            \"slug\": \"member-management\",\n            \"icon\": \"people\",\n            \"url\": null,\n            \"parent_id\": null,\n            \"order\": 3,\n            \"is_active\": true,\n            \"created_at\": \"2025-11-26 10:00:00\",\n            \"updated_at\": \"2025-11-26 10:00:00\",\n            \"children\": [\n                {\n                    \"id\": 6,\n                    \"name\": \"Members\",\n                    \"slug\": \"members\",\n                    \"icon\": \"person\",\n                    \"url\": \"/members\",\n                    \"parent_id\": 5,\n                    \"order\": 1,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-11-26 10:00:00\",\n                    \"updated_at\": \"2025-11-26 10:00:00\",\n                    \"roles\": [\n                        {\n                            \"id\": 5,\n                            \"menu_id\": 6,\n                            \"role_name\": \"super_admin\"\n                        },\n                        {\n                            \"id\": 6,\n                            \"menu_id\": 6,\n                            \"role_name\": \"admin\"\n                        },\n                        {\n                            \"id\": 7,\n                            \"menu_id\": 6,\n                            \"role_name\": \"user\"\n                        }\n                    ]\n                },\n                {\n                    \"id\": 7,\n                    \"name\": \"Job Descriptions\",\n                    \"slug\": \"job-descriptions\",\n                    \"icon\": \"briefcase\",\n                    \"url\": \"/job-descriptions\",\n                    \"parent_id\": 5,\n                    \"order\": 2,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-11-26 10:00:00\",\n                    \"updated_at\": \"2025-11-26 10:00:00\",\n                    \"roles\": [\n                        {\n                            \"id\": 8,\n                            \"menu_id\": 7,\n                            \"role_name\": \"super_admin\"\n                        },\n                        {\n                            \"id\": 9,\n                            \"menu_id\": 7,\n                            \"role_name\": \"admin\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"id\": 8,\n            \"name\": \"Settings\",\n            \"slug\": \"settings\",\n            \"icon\": \"settings\",\n            \"url\": null,\n            \"parent_id\": null,\n            \"order\": 4,\n            \"is_active\": true,\n            \"created_at\": \"2025-11-26 10:00:00\",\n            \"updated_at\": \"2025-11-26 10:00:00\",\n            \"children\": [\n                {\n                    \"id\": 9,\n                    \"name\": \"Menu Management\",\n                    \"slug\": \"menu-management\",\n                    \"icon\": \"menu\",\n                    \"url\": \"/menus\",\n                    \"parent_id\": 8,\n                    \"order\": 1,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-11-26 10:00:00\",\n                    \"updated_at\": \"2025-11-26 10:00:00\",\n                    \"roles\": [\n                        {\n                            \"id\": 10,\n                            \"menu_id\": 9,\n                            \"role_name\": \"super_admin\"\n                        }\n                    ]\n                },\n                {\n                    \"id\": 10,\n                    \"name\": \"System Settings\",\n                    \"slug\": \"system-settings\",\n                    \"icon\": \"cog\",\n                    \"url\": \"/settings/system\",\n                    \"parent_id\": 8,\n                    \"order\": 2,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-11-26 10:00:00\",\n                    \"updated_at\": \"2025-11-26 10:00:00\",\n                    \"roles\": [\n                        {\n                            \"id\": 11,\n                            \"menu_id\": 10,\n                            \"role_name\": \"super_admin\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Menu Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/menus/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus",
+								"1"
+							]
+						},
+						"description": "Get detailed information about a specific menu including its parent, children, and assigned roles.\n\n**Authorization:** Requires Casbin permission (menus, GET)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/menus/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus",
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Menu retrieved successfully\",\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"User Management\",\n        \"slug\": \"user-management\",\n        \"icon\": \"users\",\n        \"url\": null,\n        \"parent_id\": null,\n        \"order\": 2,\n        \"is_active\": true,\n        \"created_at\": \"2025-11-26 10:00:00\",\n        \"updated_at\": \"2025-11-26 10:00:00\",\n        \"parent\": null,\n        \"children\": [\n            {\n                \"id\": 3,\n                \"name\": \"Users\",\n                \"slug\": \"users\",\n                \"icon\": \"user\",\n                \"url\": \"/users\",\n                \"parent_id\": 2,\n                \"order\": 1,\n                \"is_active\": true,\n                \"created_at\": \"2025-11-26 10:00:00\",\n                \"updated_at\": \"2025-11-26 10:00:00\"\n            },\n            {\n                \"id\": 4,\n                \"name\": \"Roles\",\n                \"slug\": \"roles\",\n                \"icon\": \"shield\",\n                \"url\": \"/roles\",\n                \"parent_id\": 2,\n                \"order\": 2,\n                \"is_active\": true,\n                \"created_at\": \"2025-11-26 10:00:00\",\n                \"updated_at\": \"2025-11-26 10:00:00\"\n            }\n        ],\n        \"roles\": [\n            {\n                \"id\": 1,\n                \"menu_id\": 2,\n                \"role_name\": \"super_admin\"\n            },\n            {\n                \"id\": 2,\n                \"menu_id\": 2,\n                \"role_name\": \"admin\"\n            }\n        ]\n    }\n}"
+						},
+						{
+							"name": "Menu Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/menus/999",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus",
+										"999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Menu not found\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Menu",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Save the created menu ID for later use",
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"created_menu_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Reports\",\n    \"slug\": \"reports\",\n    \"icon\": \"chart-bar\",\n    \"url\": \"/reports\",\n    \"parent_id\": null,\n    \"order\": 5,\n    \"is_active\": true,\n    \"roles\": [\n        \"super_admin\",\n        \"admin\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/menus",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus"
+							]
+						},
+						"description": "Create a new menu item with optional role assignments.\n\n**Request Body:**\n- name: Menu name (required)\n- slug: URL-friendly slug (required, unique)\n- icon: Icon name (optional)\n- url: Menu URL (optional)\n- parent_id: Parent menu ID for submenu (optional)\n- order: Display order (optional, default: 0)\n- is_active: Active status (optional, default: true)\n- roles: Array of role names (optional)\n\n**Authorization:** Requires Casbin permission (menus, POST)\n- Only super_admin can create menus"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Reports\",\n    \"slug\": \"reports\",\n    \"icon\": \"chart-bar\",\n    \"url\": \"/reports\",\n    \"parent_id\": null,\n    \"order\": 5,\n    \"is_active\": true,\n    \"roles\": [\n        \"super_admin\",\n        \"admin\"\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/menus",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Menu created successfully\",\n    \"data\": {\n        \"id\": 11,\n        \"name\": \"Reports\",\n        \"slug\": \"reports\",\n        \"icon\": \"chart-bar\",\n        \"url\": \"/reports\",\n        \"parent_id\": null,\n        \"order\": 5,\n        \"is_active\": true,\n        \"created_at\": \"2025-11-26 14:30:00\",\n        \"updated_at\": \"2025-11-26 14:30:00\",\n        \"parent\": null,\n        \"children\": [],\n        \"roles\": [\n            {\n                \"id\": 20,\n                \"menu_id\": 11,\n                \"role_name\": \"super_admin\"\n            },\n            {\n                \"id\": 21,\n                \"menu_id\": 11,\n                \"role_name\": \"admin\"\n            }\n        ]\n    }\n}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Dashboard\",\n    \"slug\": \"dashboard\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/menus",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus"
+									]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"The slug has already been taken.\",\n    \"errors\": {\n        \"slug\": [\n            \"Slug sudah digunakan\"\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Submenu",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Monthly Reports\",\n    \"slug\": \"monthly-reports\",\n    \"icon\": \"calendar\",\n    \"url\": \"/reports/monthly\",\n    \"parent_id\": 11,\n    \"order\": 1,\n    \"is_active\": true,\n    \"roles\": [\n        \"super_admin\",\n        \"admin\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/menus",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus"
+							]
+						},
+						"description": "Create a submenu by specifying parent_id.\n\n**Authorization:** Only super_admin"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Monthly Reports\",\n    \"slug\": \"monthly-reports\",\n    \"icon\": \"calendar\",\n    \"url\": \"/reports/monthly\",\n    \"parent_id\": 11,\n    \"order\": 1,\n    \"is_active\": true,\n    \"roles\": [\n        \"super_admin\",\n        \"admin\"\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/menus",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Menu created successfully\",\n    \"data\": {\n        \"id\": 12,\n        \"name\": \"Monthly Reports\",\n        \"slug\": \"monthly-reports\",\n        \"icon\": \"calendar\",\n        \"url\": \"/reports/monthly\",\n        \"parent_id\": 11,\n        \"order\": 1,\n        \"is_active\": true,\n        \"created_at\": \"2025-11-26 14:35:00\",\n        \"updated_at\": \"2025-11-26 14:35:00\",\n        \"parent\": {\n            \"id\": 11,\n            \"name\": \"Reports\",\n            \"slug\": \"reports\",\n            \"icon\": \"chart-bar\",\n            \"url\": \"/reports\",\n            \"parent_id\": null,\n            \"order\": 5,\n            \"is_active\": true,\n            \"created_at\": \"2025-11-26 14:30:00\",\n            \"updated_at\": \"2025-11-26 14:30:00\"\n        },\n        \"children\": [],\n        \"roles\": [\n            {\n                \"id\": 22,\n                \"menu_id\": 12,\n                \"role_name\": \"super_admin\"\n            },\n            {\n                \"id\": 23,\n                \"menu_id\": 12,\n                \"role_name\": \"admin\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Menu",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Analytics & Reports\",\n    \"icon\": \"analytics\",\n    \"order\": 10,\n    \"roles\": [\n        \"super_admin\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/menus/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus",
+								"11"
+							]
+						},
+						"description": "Update an existing menu. All fields are optional, only send the fields you want to update.\n\nIf `roles` is provided, it will replace all existing role assignments.\n\n**Authorization:** Requires Casbin permission (menus, PUT)\n- Only super_admin can update menus"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Analytics & Reports\",\n    \"icon\": \"analytics\",\n    \"order\": 10,\n    \"roles\": [\n        \"super_admin\"\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/menus/11",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus",
+										"11"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Menu updated successfully\",\n    \"data\": {\n        \"id\": 11,\n        \"name\": \"Analytics & Reports\",\n        \"slug\": \"reports\",\n        \"icon\": \"analytics\",\n        \"url\": \"/reports\",\n        \"parent_id\": null,\n        \"order\": 10,\n        \"is_active\": true,\n        \"created_at\": \"2025-11-26 14:30:00\",\n        \"updated_at\": \"2025-11-26 14:45:00\",\n        \"parent\": null,\n        \"children\": [\n            {\n                \"id\": 12,\n                \"name\": \"Monthly Reports\",\n                \"slug\": \"monthly-reports\",\n                \"icon\": \"calendar\",\n                \"url\": \"/reports/monthly\",\n                \"parent_id\": 11,\n                \"order\": 1,\n                \"is_active\": true,\n                \"created_at\": \"2025-11-26 14:35:00\",\n                \"updated_at\": \"2025-11-26 14:35:00\"\n            }\n        ],\n        \"roles\": [\n            {\n                \"id\": 24,\n                \"menu_id\": 11,\n                \"role_name\": \"super_admin\"\n            }\n        ]\n    }\n}"
+						},
+						{
+							"name": "Menu Not Found",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/menus/999",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus",
+										"999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Menu not found\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Menu",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/menus/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"menus",
+								"12"
+							]
+						},
+						"description": "Delete a menu. If the menu has children, they will also be deleted (cascade).\n\n**Authorization:** Requires Casbin permission (menus, DELETE)\n- Only super_admin can delete menus"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/menus/12",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus",
+										"12"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Menu deleted successfully\"\n}"
+						},
+						{
+							"name": "Menu Not Found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/menus/999",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"menus",
+										"999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Menu not found\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Menu management endpoints with hierarchical structure and role-based access control."
+		}
+	]
+}

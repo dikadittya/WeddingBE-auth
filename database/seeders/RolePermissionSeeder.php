@@ -30,6 +30,13 @@ class RolePermissionSeeder extends Seeder
         Enforcer::addPolicy('super_admin', 'users', 'PATCH');
         Enforcer::addPolicy('super_admin', 'users', 'DELETE');
         
+        // Menus Management
+        Enforcer::addPolicy('super_admin', 'menus', 'GET');
+        Enforcer::addPolicy('super_admin', 'menus', 'POST');
+        Enforcer::addPolicy('super_admin', 'menus', 'PUT');
+        Enforcer::addPolicy('super_admin', 'menus', 'PATCH');
+        Enforcer::addPolicy('super_admin', 'menus', 'DELETE');
+        
         // Guests Management
         Enforcer::addPolicy('super_admin', 'guests', 'GET');
         Enforcer::addPolicy('super_admin', 'guests', 'POST');
@@ -50,6 +57,9 @@ class RolePermissionSeeder extends Seeder
         
         // Users - Read only
         Enforcer::addPolicy('admin', 'users', 'GET');
+        
+        // Menus - Read only
+        Enforcer::addPolicy('admin', 'menus', 'GET');
         
         // Guests - Full access
         Enforcer::addPolicy('admin', 'guests', 'GET');

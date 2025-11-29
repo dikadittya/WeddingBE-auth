@@ -1,0 +1,762 @@
+{
+	"info": {
+		"_postman_id": "wedding-auth-api-complete",
+		"name": "Wedding Auth API - Complete",
+		"description": "Complete API Collection untuk Wedding Authentication & Member Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"username\": \"johndoe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "register"]
+						},
+						"description": "Register user baru"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"John Doe\",\n    \"username\": \"johndoe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"role\": \"user\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/register",
+									"host": ["{{base_url}}"],
+									"path": ["api", "register"]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"message\": \"User registered successfully\",\n    \"data\": {\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"John Doe\",\n            \"username\": \"johndoe\",\n            \"email\": \"john@example.com\",\n            \"role\": \"user\",\n            \"created_at\": \"2025-11-26 10:00:00\",\n            \"updated_at\": \"2025-11-26 10:00:00\"\n        },\n        \"access_token\": \"1|abcdefghijklmnopqrstuvwxyz\",\n        \"token_type\": \"Bearer\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data.access_token) {",
+									"        pm.environment.set(\"auth_token\", jsonData.data.access_token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"superadmin\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "login"]
+						},
+						"description": "Login dan mendapatkan token (auto-save ke environment)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"superadmin\",\n    \"password\": \"password123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/login",
+									"host": ["{{base_url}}"],
+									"path": ["api", "login"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"Super Admin\",\n            \"username\": \"superadmin\",\n            \"email\": \"superadmin@wedding.com\",\n            \"role\": \"super_admin\",\n            \"created_at\": \"2025-11-26 10:00:00\",\n            \"updated_at\": \"2025-11-26 10:00:00\"\n        },\n        \"access_token\": \"1|abcdefghijklmnopqrstuvwxyz\",\n        \"expires_at\": \"2025-11-26 10:02:00\",\n        \"expires_in_minutes\": 2,\n        \"token_type\": \"Bearer\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Current User (Me)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/me",
+							"host": ["{{base_url}}"],
+							"path": ["api", "me"]
+						},
+						"description": "Mendapatkan data user yang sedang login beserta detail token"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/me",
+									"host": ["{{base_url}}"],
+									"path": ["api", "me"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"message\": \"User details retrieved successfully\",\n    \"data\": {\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"Super Admin\",\n            \"username\": \"superadmin\",\n            \"email\": \"superadmin@wedding.com\",\n            \"role\": \"super_admin\"\n        },\n        \"token_info\": {\n            \"name\": \"auth_token\",\n            \"created_at\": \"2025-11-26 10:00:00\",\n            \"last_used_at\": \"2025-11-26 10:01:30\",\n            \"expires_at\": \"2025-11-26 10:02:00\",\n            \"expires_in_minutes\": 2,\n            \"remaining_minutes\": 1,\n            \"remaining_seconds\": 30,\n            \"is_expired\": false\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/refresh-token",
+							"host": ["{{base_url}}"],
+							"path": ["api", "refresh-token"]
+						},
+						"description": "Refresh token untuk memperpanjang masa berlaku"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/refresh-token",
+									"host": ["{{base_url}}"],
+									"path": ["api", "refresh-token"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"message\": \"Token refreshed successfully\",\n    \"data\": {\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"Super Admin\",\n            \"email\": \"superadmin@wedding.com\",\n            \"role\": \"super_admin\"\n        },\n        \"expires_in_minutes\": 1,\n        \"new_expiration\": \"2025-11-26 10:03:00\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/logout",
+							"host": ["{{base_url}}"],
+							"path": ["api", "logout"]
+						},
+						"description": "Logout dan hapus token"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/logout",
+									"host": ["{{base_url}}"],
+									"path": ["api", "logout"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"message\": \"Logged out successfully\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Authentication endpoints"
+		},
+		{
+			"name": "Users CRUD",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users?per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users"],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "15"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all users with pagination (requires super_admin, admin, or user role)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/users?per_page=15",
+									"host": ["{{base_url}}"],
+									"path": ["api", "users"],
+									"query": [
+										{
+											"key": "per_page",
+											"value": "15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Users retrieved successfully\",\n    \"data\": {\n        \"current_page\": 1,\n        \"data\": [\n            {\n                \"id\": 1,\n                \"name\": \"Super Admin\",\n                \"email\": \"superadmin@wedding.com\",\n                \"role\": \"super_admin\",\n                \"created_at\": \"2025-11-26 10:00:00\",\n                \"updated_at\": \"2025-11-26 10:00:00\"\n            },\n            {\n                \"id\": 2,\n                \"name\": \"Admin User\",\n                \"email\": \"admin@wedding.com\",\n                \"role\": \"admin\",\n                \"created_at\": \"2025-11-26 10:00:00\",\n                \"updated_at\": \"2025-11-26 10:00:00\"\n            }\n        ],\n        \"per_page\": 15,\n        \"total\": 2\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "1"]
+						},
+						"description": "Get user by ID (requires super_admin, admin, or user role)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/users/1",
+									"host": ["{{base_url}}"],
+									"path": ["api", "users", "1"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"User retrieved successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Super Admin\",\n        \"email\": \"superadmin@wedding.com\",\n        \"role\": \"super_admin\",\n        \"created_at\": \"2025-11-26 10:00:00\",\n        \"updated_at\": \"2025-11-26 10:00:00\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jane Smith\",\n    \"email\": \"jane@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users"]
+						},
+						"description": "Create new user (requires super_admin role only)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Jane Smith\",\n    \"email\": \"jane@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"user\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/users",
+									"host": ["{{base_url}}"],
+									"path": ["api", "users"]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"User created successfully\",\n    \"data\": {\n        \"id\": 3,\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@example.com\",\n        \"role\": \"user\",\n        \"created_at\": \"2025-11-26 10:00:00\",\n        \"updated_at\": \"2025-11-26 10:00:00\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Jane Doe Updated\",\n    \"email\": \"jane.updated@example.com\",\n    \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/3",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "3"]
+						},
+						"description": "Update user (requires super_admin role only)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Jane Doe Updated\",\n    \"email\": \"jane.updated@example.com\",\n    \"role\": \"admin\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/users/3",
+									"host": ["{{base_url}}"],
+									"path": ["api", "users", "3"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"User updated successfully\",\n    \"data\": {\n        \"id\": 3,\n        \"name\": \"Jane Doe Updated\",\n        \"email\": \"jane.updated@example.com\",\n        \"role\": \"admin\",\n        \"created_at\": \"2025-11-26 10:00:00\",\n        \"updated_at\": \"2025-11-26 10:05:00\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users/3",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "3"]
+						},
+						"description": "Delete user (requires super_admin role only)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/users/3",
+									"host": ["{{base_url}}"],
+									"path": ["api", "users", "3"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"User deleted successfully\"\n}"
+						}
+					]
+				}
+			],
+			"description": "User CRUD endpoints with Casbin RBAC authorization"
+		},
+		{
+			"name": "Members",
+			"item": [
+				{
+					"name": "Get All Members",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/members?per_page=15&sort_by=nama&sort_order=asc",
+							"host": ["{{base_url}}"],
+							"path": ["api", "members"],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Items per page"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number",
+									"disabled": true
+								},
+								{
+									"key": "core_team",
+									"value": "1",
+									"description": "Filter core team (1/0)",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "john",
+									"description": "Search nama, alamat, nomor_hp",
+									"disabled": true
+								},
+								{
+									"key": "jabatan",
+									"value": "Manager",
+									"description": "Filter by jabatan",
+									"disabled": true
+								},
+								{
+									"key": "key_name",
+									"value": "TW123",
+									"description": "Filter by key_name",
+									"disabled": true
+								},
+								{
+									"key": "sort_by",
+									"value": "nama",
+									"description": "Sort column: id, nama, jabatan, is_core_team, created_at, updated_at"
+								},
+								{
+									"key": "sort_order",
+									"value": "asc",
+									"description": "Sort order: asc or desc"
+								}
+							]
+						},
+						"description": "Get all members with pagination, filters, and sorting (Public endpoint)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/members?per_page=15",
+									"host": ["{{base_url}}"],
+									"path": ["api", "members"],
+									"query": [
+										{
+											"key": "per_page",
+											"value": "15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Members retrieved successfully\",\n    \"data\": {\n        \"current_page\": 1,\n        \"data\": [\n            {\n                \"id\": 1,\n                \"nama\": \"John Doe\",\n                \"jabatan\": \"Wedding Planner\",\n                \"alamat\": \"Jl. Sudirman No. 123\",\n                \"nomor_hp\": \"081234567890\",\n                \"is_core_team\": 1,\n                \"key_name\": \"WP001\",\n                \"created_at\": \"2025-11-26 10:00:00\",\n                \"updated_at\": \"2025-11-26 10:00:00\",\n                \"jobdescs\": [\n                    {\n                        \"id\": 1,\n                        \"id_member\": 1,\n                        \"id_jobdesc\": 1,\n                        \"nama_jobdesc\": \"Wedding Coordinator\",\n                        \"tipe_jobdesc\": \"Utama\",\n                        \"key_job\": \"WC001\"\n                    }\n                ]\n            },\n            {\n                \"id\": 2,\n                \"nama\": \"Jane Smith\",\n                \"jabatan\": \"Photographer\",\n                \"alamat\": \"Jl. Thamrin No. 456\",\n                \"nomor_hp\": \"081298765432\",\n                \"is_core_team\": 0,\n                \"key_name\": \"PH001\",\n                \"created_at\": \"2025-11-26 10:00:00\",\n                \"updated_at\": \"2025-11-26 10:00:00\",\n                \"jobdescs\": []\n            }\n        ],\n        \"per_page\": 15,\n        \"total\": 2\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Member by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/members/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "members", "1"]
+						},
+						"description": "Get member detail by ID with jobdescs relation (Public endpoint)"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/members/1",
+									"host": ["{{base_url}}"],
+									"path": ["api", "members", "1"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Member retrieved successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"nama\": \"John Doe\",\n        \"jabatan\": \"Wedding Planner\",\n        \"alamat\": \"Jl. Sudirman No. 123, Jakarta\",\n        \"nomor_hp\": \"081234567890\",\n        \"is_core_team\": 1,\n        \"key_name\": \"WP001\",\n        \"created_at\": \"2025-11-26 10:00:00\",\n        \"updated_at\": \"2025-11-26 10:00:00\",\n        \"jobdescs\": [\n            {\n                \"id\": 1,\n                \"id_member\": 1,\n                \"id_jobdesc\": 1,\n                \"nama_jobdesc\": \"Wedding Coordinator\",\n                \"tipe_jobdesc\": \"Utama\",\n                \"key_job\": \"WC001\"\n            },\n            {\n                \"id\": 2,\n                \"id_member\": 1,\n                \"id_jobdesc\": 2,\n                \"nama_jobdesc\": \"Event Manager\",\n                \"tipe_jobdesc\": \"Tambahan\",\n                \"key_job\": \"EM001\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "Member management endpoints (Public - no authentication required)"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

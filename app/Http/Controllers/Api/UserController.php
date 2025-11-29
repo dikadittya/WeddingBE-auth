@@ -17,7 +17,9 @@ class UserController extends Controller
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->get('per_page', 15);
-        $users = User::latest()->paginate($perPage);
+        $query = User::query();
+        $query->with(['member']);
+        $users = $query->latest()->paginate($perPage)->appends($request->query())->withPath('');
         
         return response()->json([
             'success' => true,
@@ -33,8 +35,21 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         $validated['password'] = bcrypt($validated['password']);
-        
+        $memberId = $validated['member_id'] ?? null;
+        unset($validated['member_id']);
+
         $user = User::create($validated);
+
+        // Optionally attach member relation if provided (Member belongsTo User)
+        if ($memberId) {
+            $member = \App\Models\Member::find($memberId);
+            if ($member) {
+                $member->user()->associate($user); // associate works on belongsTo inside Member model
+                $member->save();
+            }
+        }
+
+        $user->load('member');
         
         return response()->json([
             'success' => true,
@@ -48,7 +63,7 @@ class UserController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $user = User::find($id);
+        $user = User::with(['member'])->find($id);
         
         if (!$user) {
             return response()->json([
@@ -79,13 +94,21 @@ class UserController extends Controller
         }
         
         $validated = $request->validated();
-        
-        // Only hash password if provided
-        if (isset($validated['password'])) {
-            $validated['password'] = bcrypt($validated['password']);
+        // Only allow username, password, and role to be updated (all optional)
+        $allowedKeys = ['username', 'password', 'role'];
+        $filtered = array_intersect_key($validated, array_flip($allowedKeys));
+
+        // Hash password if provided
+        if (isset($filtered['password'])) {
+            $filtered['password'] = bcrypt($filtered['password']);
         }
-        
-        $user->update($validated);
+
+        // Apply updates only for allowed fields
+        if (!empty($filtered)) {
+            $user->update($filtered);
+        }
+
+        $user->load('member');
         
         return response()->json([
             'success' => true,
