@@ -37,6 +37,13 @@ class RolePermissionSeeder extends Seeder
         Enforcer::addPolicy('super_admin', 'menus', 'PATCH');
         Enforcer::addPolicy('super_admin', 'menus', 'DELETE');
         
+        // Casbin Rules Management (super_admin only)
+        Enforcer::addPolicy('super_admin', 'casbin_rules', 'GET');
+        Enforcer::addPolicy('super_admin', 'casbin_rules', 'POST');
+        Enforcer::addPolicy('super_admin', 'casbin_rules', 'PUT');
+        Enforcer::addPolicy('super_admin', 'casbin_rules', 'PATCH');
+        Enforcer::addPolicy('super_admin', 'casbin_rules', 'DELETE');
+        
         // Guests Management
         Enforcer::addPolicy('super_admin', 'guests', 'GET');
         Enforcer::addPolicy('super_admin', 'guests', 'POST');

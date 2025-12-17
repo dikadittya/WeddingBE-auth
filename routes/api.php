@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CasbinRuleController;
 use App\Http\Controllers\Api\DataBungaMelatiController;
 use App\Http\Controllers\Api\DataBusanaController;
 use App\Http\Controllers\Api\DataBusanaKategoriController;
@@ -55,31 +56,14 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/members', [MemberController::class, 'index']);
 Route::get('/members/{id}', [MemberController::class, 'show']);
 
-// Data Busana API Routes
-Route::get('data-busana', [DataBusanaController::class, 'index']); //->middleware('casbin:data-busana,read');
-Route::get('data-busana/{id}', [DataBusanaController::class, 'show']); //->middleware('casbin:data-busana,read');
-Route::post('data-busana', [DataBusanaController::class, 'store']); //->middleware('casbin:data-busana,create');
-Route::put('data-busana/{id}', [DataBusanaController::class, 'update']); //->middleware('casbin:data-busana,update');
-Route::delete('data-busana/{id}', [DataBusanaController::class, 'destroy']); //->middleware('casbin:data-busana,delete');
+// Casbin Rules CRUD (for super_admin only)
+Route::get('/casbin-rules', [CasbinRuleController::class, 'index']);
+Route::get('/casbin-rules/{id}', [CasbinRuleController::class, 'show']);
+Route::post('/casbin-rules', [CasbinRuleController::class, 'store']);
+Route::put('/casbin-rules/{id}', [CasbinRuleController::class, 'update']);
+Route::patch('/casbin-rules/{id}', [CasbinRuleController::class, 'update']);
+Route::delete('/casbin-rules/{id}', [CasbinRuleController::class, 'destroy']);
 
-// Data Busana Kategori API Routes
-Route::get('data-busana-kategori', [DataBusanaKategoriController::class, 'index']); //->middleware('casbin:data-busana-kategori,read');
-Route::get('data-busana-kategori/{id}', [DataBusanaKategoriController::class, 'show']); //->middleware('casbin:data-busana-kategori,read');
-Route::post('data-busana-kategori', [DataBusanaKategoriController::class, 'store']); //->middleware('casbin:data-busana-kategori,create');
-Route::put('data-busana-kategori/{id}', [DataBusanaKategoriController::class, 'update']); //->middleware('casbin:data-busana-kategori,update');
-Route::delete('data-busana-kategori/{id}', [DataBusanaKategoriController::class, 'destroy']); //->middleware('casbin:data-busana-kategori,delete');
-
-// Custom route for simple kategori busana list (dropdown usage)
-Route::get('data-busana-kategori-list', [DataBusanaKategoriController::class, 'list']); //->middleware('casbin:data-busana-kategori,read');
-
-// Data Bunga Melati API Routes
-Route::get('data-bunga-melati', [DataBungaMelatiController::class, 'index']); //->middleware('casbin:data-bunga-melati,read');
-Route::get('data-bunga-melati/{id}', [DataBungaMelatiController::class, 'show']); //->middleware('casbin:data-bunga-melati,read');
-Route::post('data-bunga-melati', [DataBungaMelatiController::class, 'store']); //->middleware('casbin:data-bunga-melati,create');
-Route::put('data-bunga-melati/{id}', [DataBungaMelatiController::class, 'update']); //->middleware('casbin:data-bunga-melati,update');
-Route::delete('data-bunga-melati/{id}', [DataBungaMelatiController::class, 'destroy']); //->middleware('casbin:data-bunga-melati,delete');
-
-// Custom routes for Data Bunga Melati
-Route::get('data-bunga-melati-list', [DataBungaMelatiController::class, 'list']); //->middleware('casbin:data-bunga-melati,read');
-Route::get('data-bunga-melati-jenis-list', [DataBungaMelatiController::class, 'getJenisList']); //->middleware('casbin:data-bunga-melati,read');
-Route::get('data-bunga-melati-bouquet-list', [DataBungaMelatiController::class, 'getBouquetList']); //->middleware('casbin:data-bunga-melati,read');
+// Additional Casbin helper routes
+Route::get('/casbin-rules/subject/{subject}/policies', [CasbinRuleController::class, 'getPoliciesForSubject']);
+Route::get('/casbin-rules/user/{user}/roles', [CasbinRuleController::class, 'getRolesForUser']);

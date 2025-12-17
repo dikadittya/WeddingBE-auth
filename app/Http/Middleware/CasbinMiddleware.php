@@ -34,6 +34,8 @@ class CasbinMiddleware
             $action = $request->method();
         }
 
+        $action = strtoupper($action);
+
         if (!Enforcer::enforce($role, $resource, $action)) {
             return response()->json([
                 'status' => 'error',

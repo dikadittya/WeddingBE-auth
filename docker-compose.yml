@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Application Service (PHP-FPM)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wedding-auth-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - wedding-auth-network
+
+  # Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: wedding-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+    networks:
+      - wedding-auth-network
+
+networks:
+  wedding-auth-network:
+    driver: bridge
+
+
