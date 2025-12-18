@@ -40,6 +40,12 @@ RUN composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progr
 # Copy application files
 COPY . .
 
+# Create .env file if it doesn't exist
+RUN if [ ! -f .env ]; then cp .env.docker .env; fi
+
+# Generate Laravel app key if not set
+RUN php artisan key:generate --force
+
 # Set permissions for storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache

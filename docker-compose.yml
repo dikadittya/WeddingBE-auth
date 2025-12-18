@@ -6,13 +6,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: wedding-auth-app
+    container_name: wedding-be-auth
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
       - ./:/var/www
     networks:
-      - wedding-auth-network
+      - wedding-be-auth-network
 
   # Nginx Service
   nginx:
@@ -25,10 +25,10 @@ services:
       - ./:/var/www
       - ./docker/nginx/conf.d:/etc/nginx/conf.d/
     networks:
-      - wedding-auth-network
+      - wedding-be-auth-network
 
 networks:
-  wedding-auth-network:
+  wedding-be-auth-network:
     driver: bridge
 
 
