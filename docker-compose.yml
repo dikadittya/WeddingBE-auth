@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  api-auth:
+    build: .
+    container_name: api-auth
+    volumes:
+      - ../api-auth:/var/www
+    ports:
+      - "9000:9000"
+    networks:
+      - backend-network
+
+  dev-server:
+    build: .
+    container_name: api-auth-dev
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    volumes:
+      - ../api-auth:/var/www
+    ports:
+      - "8000:8000"
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    external: true
