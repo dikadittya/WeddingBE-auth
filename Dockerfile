@@ -16,11 +16,9 @@ WORKDIR /var/www
 COPY . .
 
 # Copy .env.example to .env
-RUN cp .env.example .env
-
-RUN composer install --no-dev --optimize-autoloader
-
-RUN chown -R www-data:www-data storage bootstrap/cache
+# RUN cp .env.example .env
+# RUN composer install --no-dev --optimize-autoloader
+# RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 9000
 
