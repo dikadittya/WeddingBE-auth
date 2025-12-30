@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
+    Route::get('/menus/sidebar', [MenuController::class, 'sidebar']); // Sidebar menu for authenticated user
 
     // Users CRUD with Casbin authorization
     Route::middleware('casbin:users,GET')->get('/users', [UserController::class, 'index']);

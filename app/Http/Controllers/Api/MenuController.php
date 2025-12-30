@@ -224,4 +224,83 @@ class MenuController extends Controller
             'data' => $menus
         ]);
     }
+
+    /**
+     * Get sidebar menu for authenticated user based on their role.
+     */
+    public function sidebar(Request $request): JsonResponse
+    {
+        try {
+            $user = $request->user();
+            
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not authenticated'
+                ], 401);
+            }
+            
+            $userRole = $user->role;
+            
+            if (!$userRole) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User role not found'
+                ], 404);
+            }
+            
+            // Get parent menus that belong to user's role and are active
+            $parentMenus = Menu::with(['children' => function($query) use ($userRole) {
+                    $query->where('is_active', true)
+                        ->whereHas('roles', function($q) use ($userRole) {
+                            $q->where('role_name', $userRole);
+                        })
+                        ->orderBy('order');
+                }, 'children.roles'])
+                ->whereNull('parent_id')
+                ->where('is_active', true)
+                ->whereHas('roles', function($q) use ($userRole) {
+                    $q->where('role_name', $userRole);
+                })
+                ->orderBy('order')
+                ->get();
+            
+            // Transform the data for sidebar format
+            $sidebarMenus = $parentMenus->map(function($menu) {
+                return [
+                    'id' => $menu->id,
+                    'name' => $menu->name,
+                    'slug' => $menu->slug,
+                    'icon' => $menu->icon,
+                    'url' => $menu->url,
+                    'order' => $menu->order,
+                    'children' => $menu->children->map(function($child) {
+                        return [
+                            'id' => $child->id,
+                            'name' => $child->name,
+                            'slug' => $child->slug,
+                            'icon' => $child->icon,
+                            'url' => $child->url,
+                            'order' => $child->order,
+                        ];
+                    })
+                ];
+            });
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Sidebar menu retrieved successfully',
+                'data' => [
+                    'user_role' => $userRole,
+                    'menus' => $sidebarMenus
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve sidebar menu',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
