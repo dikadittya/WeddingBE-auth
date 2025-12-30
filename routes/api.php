@@ -55,6 +55,12 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/members', [MemberController::class, 'index']);
+Route::post('/contohpost', function () {
+    return response()->json([
+        'message' => 'contohpost APIATH!'
+    ]);
+});
+
 Route::get('/members/{id}', [MemberController::class, 'show']);
 
 // Casbin Rules CRUD (for super_admin only)
