@@ -37,21 +37,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/menus/sidebar', [MenuController::class, 'sidebar']); // Sidebar menu for authenticated user
 
     // Users CRUD with Casbin authorization
-    Route::middleware('casbin:users,GET')->get('/users', [UserController::class, 'index']);
-    Route::middleware('casbin:users,GET')->get('/users/{user}', [UserController::class, 'show']);
-    Route::middleware('casbin:users,POST')->post('/users', [UserController::class, 'store']);
-    Route::middleware('casbin:users,PUT')->put('/users/{user}', [UserController::class, 'update']);
-    Route::middleware('casbin:users,PATCH')->patch('/users/{user}', [UserController::class, 'update']);
-    Route::middleware('casbin:users,DELETE')->delete('/users/{user}', [UserController::class, 'destroy']);
+    Route::get('/users', [UserController::class, 'index']); // middleware('casbin:users,GET')->
+    Route::get('/users/{user}', [UserController::class, 'show']); // middleware('casbin:users,GET')->
+    Route::post('/users', [UserController::class, 'store']); // middleware('casbin:users,POST')->
+    Route::put('/users/{user}', [UserController::class, 'update']); // middleware('casbin:users,PUT')->
+    Route::patch('/users/{user}', [UserController::class, 'update']); // middleware('casbin:users,PATCH')->
+    Route::delete('/users/{user}', [UserController::class, 'destroy']); // middleware('casbin:users,DELETE')->
 
     // Menus CRUD with Casbin authorization
-    Route::middleware('casbin:menus,GET')->get('/menus', [MenuController::class, 'index']);
-    Route::middleware('casbin:menus,GET')->get('/menus/tree', [MenuController::class, 'tree']);
-    Route::middleware('casbin:menus,GET')->get('/menus/{menu}', [MenuController::class, 'show']);
-    Route::middleware('casbin:menus,POST')->post('/menus', [MenuController::class, 'store']);
-    Route::middleware('casbin:menus,PUT')->put('/menus/{menu}', [MenuController::class, 'update']);
-    Route::middleware('casbin:menus,PATCH')->patch('/menus/{menu}', [MenuController::class, 'update']);
-    Route::middleware('casbin:menus,DELETE')->delete('/menus/{menu}', [MenuController::class, 'destroy']);
+    Route::get('/menus', [MenuController::class, 'index']); // middleware('casbin:menus,GET')->
+    Route::get('/menus/tree', [MenuController::class, 'tree']); // middleware('casbin:menus,GET')->
+    Route::get('/menus/{menu}', [MenuController::class, 'show']); // middleware('casbin:menus,GET')->
+    Route::post('/menus', [MenuController::class, 'store']); // middleware('casbin:menus,POST')->
+    Route::put('/menus/{menu}', [MenuController::class, 'update']); // middleware('casbin:menus,PUT')->
+    Route::patch('/menus/{menu}', [MenuController::class, 'update']); // middleware('casbin:menus,PATCH')->
+    Route::delete('/menus/{menu}', [MenuController::class, 'destroy']); // middleware('casbin:menus,DELETE')->
 });
 
 Route::get('/members', [MemberController::class, 'index']);

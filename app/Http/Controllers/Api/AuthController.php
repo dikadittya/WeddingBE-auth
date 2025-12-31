@@ -127,7 +127,7 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
-        $user = $request->user()->select('id', 'name', 'email', 'role')->first();
+        $user = $request->user();
         $currentToken = $request->user()->currentAccessToken();
         $tokenCreatedAt = $currentToken->created_at;
         $tokenExpiresAt = $currentToken->expires_at;
