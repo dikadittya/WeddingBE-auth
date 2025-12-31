@@ -249,21 +249,33 @@ class MenuController extends Controller
                 ], 404);
             }
             
-            // Get parent menus that belong to user's role and are active
-            $parentMenus = Menu::with(['children' => function($query) use ($userRole) {
-                    $query->where('is_active', true)
-                        ->whereHas('roles', function($q) use ($userRole) {
-                            $q->where('role_name', $userRole);
-                        })
-                        ->orderBy('order');
-                }, 'children.roles'])
-                ->whereNull('parent_id')
-                ->where('is_active', true)
-                ->whereHas('roles', function($q) use ($userRole) {
-                    $q->where('role_name', $userRole);
-                })
-                ->orderBy('order')
-                ->get();
+            // If user is super_admin, return all active menus
+            if ($userRole === 'super_admin') {
+                $parentMenus = Menu::with(['children' => function($query) {
+                        $query->where('is_active', true)
+                            ->orderBy('order');
+                    }, 'children.roles'])
+                    ->whereNull('parent_id')
+                    ->where('is_active', true)
+                    ->orderBy('order')
+                    ->get();
+            } else {
+                // Get parent menus that belong to user's role and are active
+                $parentMenus = Menu::with(['children' => function($query) use ($userRole) {
+                        $query->where('is_active', true)
+                            ->whereHas('roles', function($q) use ($userRole) {
+                                $q->where('role_name', $userRole);
+                            })
+                            ->orderBy('order');
+                    }, 'children.roles'])
+                    ->whereNull('parent_id')
+                    ->where('is_active', true)
+                    ->whereHas('roles', function($q) use ($userRole) {
+                        $q->where('role_name', $userRole);
+                    })
+                    ->orderBy('order')
+                    ->get();
+            }
             
             // Transform the data for sidebar format
             $sidebarMenus = $parentMenus->map(function($menu) {
